@@ -26,21 +26,40 @@
 
 <script>
 import BaseButton from "@/components/_base-button.vue";
+import router from "../router/index";
+import { mapState } from "vuex";
 
 export default {
   name: "Search",
   components: {
     BaseButton
   },
+  mounted() {
+    console.log(this.searchString);
+    this.title = this.searchString;
+  },
   data() {
     return {
       title: ""
     };
   },
+
   methods: {
     search() {
-
+      console.log(this.page)
+      this.$store.dispatch("SET_SEARCH_STRING", this.title);
+      if (this.searchString !== '') {
+        this.$store.dispatch("GET_MOVIES", {title: this.title, page: this.page}).then(response => {
+          console.log(response);
+          if (!response.data.Error) {
+            router.replace("/results")
+          }
+        })
+      }
     }
+  },
+  computed: {
+    ...mapState(["searchString", "page"])
   }
 }
 </script>
