@@ -10,7 +10,7 @@
       <Loader v-if="loadingMovie"> </Loader>
       <Chip v-else-if="!movieSelected.Plot" imageSrc="year.png" :text="movieSelected.Year" alt="Year" class="smallHeight smallWidth"></Chip>
       <Chip  v-else imageSrc="plot.png" :text="movieSelected.Plot" alt="Plot" class="largeHeight largeWidth"></Chip>
-      <transition-group tag="div" class="img-slider" name="slide">
+      <transition-group tag="div" class="img-slider" :name="back? 'slideback' : 'slide'">
         <div v-for="number in [currentImg]" :key="number" >
           <img :src="moviesList[Math.abs(currentImg) % moviesList.length].Poster"/>
         </div>
