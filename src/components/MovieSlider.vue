@@ -96,6 +96,7 @@ export default {
     };
   },
   mounted() {
+    console.log('mounted')
     this.waitToGetMovie();
   },
   methods: {
@@ -125,13 +126,16 @@ export default {
           .then(response => {
             clearTimeout(this.t);
             this.$store.dispatch("SET_MOVIE", response.data.Search[0]);
+            this.waitToGetMovie();
           });
       }
     },
     prev() {
       this.back = true;
+      console.log(this.currentImg)
       if (this.currentMovieIndex !== 0) {
         this.currentImg = this.currentImg - 1;
+        console.log(this.currentImg)
         console.log(
           this.moviesList[Math.abs(this.currentImg) % this.moviesList.length]
         );
@@ -146,9 +150,12 @@ export default {
         this.$store
           .dispatch("GET_MOVIES", { title: this.searchString, page: this.page })
           .then(response => {
+            console.log(response, this.moviesList)
             this.$store.dispatch("SET_MOVIE", response.data.Search[9])
             .then(response => {
               this.currentImg = 9;
+              this.waitToGetMovie();
+              console.log(this.currentImg)
               console.log(
                 response, this.moviesList[Math.abs(this.currentImg) % this.moviesList.length]
               );

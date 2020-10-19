@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Loader v-if="loadingMovies"></Loader>
-    <MovieSlider v-else></MovieSlider>
+    <Loader v-show="loadingMovies"></Loader>
+    <MovieSlider v-show="!loadingMovies"></MovieSlider>
   </div>
 </template>
 
