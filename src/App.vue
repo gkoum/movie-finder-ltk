@@ -1,10 +1,21 @@
 <template>
   <div id="app">
     <div id="nav">
+      <NavBar />
     </div>
     <router-view />
   </div>
 </template>
+
+<script>
+import NavBar from "@/components/NavBar.vue";
+
+export default {
+  components: {
+    NavBar
+  }
+}
+</script>
 
 <style lang="scss">
 #app {
@@ -16,7 +27,7 @@
 }
 
 #nav {
-  padding: 30px;
+  padding: 10px;
 
   a {
     font-weight: bold;
