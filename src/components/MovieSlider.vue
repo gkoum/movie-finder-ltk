@@ -20,7 +20,7 @@
       <Chip  v-else imageSrc="details.png" :text="allInfo" alt="Author" class="largeHeight largeWidth"></Chip>
     </span>
   </div>
-  <BaseButton type="button" @click="prev" class="prevButton">
+  <BaseButton type="button" @click="prev" class="prevButton" :disabled="disableButton">
     <span>&#10094;</span>
   </BaseButton>
   <BaseButton type="button" @click="next" class="nextButton">
@@ -69,10 +69,10 @@ export default {
     next() {
       this.back = false;
       this.currentImg = this.currentImg + 1;
-      const currentMovieIndex = this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
-      console.log(currentMovieIndex, this.moviesList)
-      if (currentMovieIndex !== 9) {
-        this.$store.dispatch("SET_MOVIE", this.moviesList[currentMovieIndex + 1])
+      // const currentMovieIndex = this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
+      console.log(this.currentMovieIndex, this.moviesList)
+      if (this.currentMovieIndex !== 9) {
+        this.$store.dispatch("SET_MOVIE", this.moviesList[this.currentMovieIndex + 1])
         this.waitToGetMovie()
       } else {
         this.$store.dispatch("SET_PAGE", this.page + 1)
@@ -87,9 +87,9 @@ export default {
     prev() {
       this.back = true;
       this.currentImg = this.currentImg - 1;
-      const currentMovieIndex = this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
-      if (currentMovieIndex !== 0) {
-        this.$store.dispatch("SET_MOVIE", this.moviesList[currentMovieIndex - 1])
+      // const currentMovieIndex = this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
+      if (this.currentMovieIndex !== 0) {
+        this.$store.dispatch("SET_MOVIE", this.moviesList[this.currentMovieIndex - 1])
         this.waitToGetMovie()
       } else {
         this.$store.dispatch("SET_PAGE", this.page - 1)
@@ -103,6 +103,12 @@ export default {
     }
   },
   computed: {
+    currentMovieIndex () {
+      return this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
+    },
+    disableButton () {
+      return this.currentMovieIndex === 0 && this.page === 1
+    },
     allInfo () {
       return `Writer: ${this.movieSelected.Writer}<hr/>
         Director: ${this.movieSelected.Director}<hr/>
