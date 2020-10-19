@@ -2,12 +2,31 @@
 <template>
 <div>
   <div id="slider">
+    <Chip v-if="movieSelected.Plot" imageSrc="year.png" :text="movieSelected.Year" alt="Year" class="smallHeight smallWidth"></Chip>
+    <Chip imageSrc="title.jpg" :text="movieSelected.Title" alt="Title"></Chip>
+    <Chip v-if="movieSelected.Writer" imageSrc="type.png" :text="movieSelected.Type" alt="Type" class="smallHeight smallWidth"></Chip>
+    <div class="break"></div>
     <span id="transition">
+      <Loader v-if="loadingMovie"> </Loader>
+      <Chip v-else-if="!movieSelected.Plot" imageSrc="year.png" :text="movieSelected.Year" alt="Year" class="smallHeight smallWidth"></Chip>
+      <Chip  v-else imageSrc="plot.png" :text="movieSelected.Plot" alt="Plot" class="largeHeight largeWidth"></Chip>
+      <!-- <transition-group
+        tag="div"
+        class="img-slider"
+        :name="back ? 'slideback' : 'slide'"
+      >
+        <div v-for="movie in moviesList" :key="movie.imdbID">
+          <img :src="movieSelected.Poster" />
+        </div>
+      </transition-group> -->
       <transition-group tag="div" class="img-slider" name="slide">
         <div v-for="number in [currentImg]" :key="number" >
           <img :src="moviesList[Math.abs(currentImg) % moviesList.length].Poster"/>
         </div>
       </transition-group>
+      <Loader v-if="loadingMovie"> </Loader>
+      <Chip v-else-if="!movieSelected.Writer" imageSrc="type.png" :text="movieSelected.Type" alt="Type" class="smallHeight smallWidth"></Chip>
+      <Chip  v-else imageSrc="details.png" :text="allInfo" alt="Author" class="largeHeight largeWidth"></Chip>
     </span>
   </div>
   <BaseButton type="button" @click="prev" class="prevButton">
@@ -17,16 +36,19 @@
     <span>&#10095;</span>
   </BaseButton>
 </div>
-  
 </template>
 
 <script>
 import { mapState } from "vuex";
-import BaseButton from "@/components/_base-button.vue";;
+import BaseButton from "@/components/_base-button.vue";
+import Chip from "@/components/Chip.vue";
+import Loader from "@/components/Loader.vue";
 
 export default {
   components: {
-    BaseButton
+    BaseButton,
+    Chip,
+    Loader
   },
   data() {
     return {
@@ -46,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["moviesList"])
+    ...mapState(["loadingMovie", "moviesList", "movieSelected"])
   }
 };
 </script>
