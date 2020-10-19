@@ -1,19 +1,31 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+// import router from "../router/index";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     loadingMovies: false,
+    loadingMovie: false,
     moviesList: [],
-    searchString: ""
+    searchString: "",
+    movieSelected: {},
+    page: 1
   },
   mutations: {
+    SET_PAGE: (state, { page }) => {
+      console.log(page);
+      state.page = page;
+    },
     SET_SEARCH_STRING: (state, { searchString }) => {
       console.log(searchString);
       state.searchString = searchString;
+    },
+    SET_MOVIE: (state, { movieSelected }) => {
+      console.log(movieSelected);
+      state.movieSelected = movieSelected;
     },
     SET_MOVIES: (state, { movies }) => {
       console.log(movies);
@@ -22,8 +34,35 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    SET_PAGE: function ({ commit }, page) {
+      commit("SET_PAGE", { page: page });
+    },
     SET_SEARCH_STRING: function ({ commit }, searchString) {
       commit("SET_SEARCH_STRING", { searchString: searchString });
+    },
+    SET_MOVIE: function ({ commit }, movie) {
+      commit("SET_MOVIE", { movieSelected: movie });
+    },
+    GET_MOVIE: function ({ state, commit }, imdbID) {
+      state.loadingMovie = true;
+      axios
+        .get(`http://www.omdbapi.com/?i=${imdbID}&apikey=6f37363d`)
+        .then(response => {
+          console.log(response);
+          if (response.data.Response === "False") {
+            alert(response.data.Error);
+          } else {
+            console.log(response)
+            commit("SET_MOVIE", { movieSelected: response.data });
+          }
+          state.loadingMovie = false;
+          return response;
+        })
+        .catch(err => {
+          state.loadingMovie = false;
+          alert(err);
+          return err;
+        });
     },
     GET_MOVIES: function ({ state, commit }, { title, page }) {
       if (title !== "") {

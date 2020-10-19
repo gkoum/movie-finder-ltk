@@ -52,23 +52,68 @@ export default {
   },
   data() {
     return {
+      imgList: [
+        'http://via.placeholder.com/350x150',
+        'http://via.placeholder.com/350x151',
+        'http://via.placeholder.com/350x152'
+      ],
       currentImg: 0,
       back: false,
       t: () => {}
     };
   },
+  mounted() {
+    // setInterval(() => {
+    //     this.currentImg = this.currentImg + 1;
+    // }, 3000);
+    this.$store.dispatch("SET_MOVIE", this.movieSelected)
+    this.waitToGetMovie()
+  },
   methods: {
+    getMovie () {
+      console.log(this.movieSelected)
+      this.$store.dispatch("GET_MOVIE", this.movieSelected.imdbID)
+    },
+    waitToGetMovie () {
+      clearTimeout(this.t)
+      this.t = setTimeout(() => {
+        this.getMovie()
+      }, 3000);
+    },
     next() {
       this.back = false;
       this.currentImg = this.currentImg + 1;
+      const currentMovieIndex = this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
+      console.log(currentMovieIndex, this.moviesList)
+      if (currentMovieIndex !== 9) {
+        this.$store.dispatch("SET_MOVIE", this.moviesList[currentMovieIndex + 1])
+        this.waitToGetMovie()
+      } else {
+        this.$store.dispatch("SET_PAGE", this.page + 1)
+        this.$store.dispatch("GET_MOVIES", {title: this.searchString, page: this.page})
+        .then(response => {
+          console.log(response);
+          clearTimeout(this.t)
+          this.$store.dispatch("SET_MOVIE", response.data.Search[0])
+          // this.waitToGetMovie()
+        })
+      }
     },
     prev() {
       this.back = true;
       this.currentImg = this.currentImg - 1;
+      const currentMovieIndex = this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
+      this.$store.dispatch("SET_MOVIE", this.moviesList[currentMovieIndex - 1])
+      this.waitToGetMovie()
     }
   },
   computed: {
-    ...mapState(["loadingMovie", "moviesList", "movieSelected"])
+    allInfo () {
+      return `Writer: ${this.movieSelected.Writer}<hr/>
+        Director: ${this.movieSelected.Director}<hr/>
+        Actors: ${this.movieSelected.Actors}`
+    },
+    ...mapState(["searchString", "loadingMovies", "loadingMovie", "moviesList", "movieSelected", "page"])
   }
 };
 </script>
