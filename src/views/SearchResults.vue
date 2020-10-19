@@ -16,7 +16,7 @@ export default {
     Loader
   },
   computed: {
-    ...mapState(['loadingMovies'])
+    ...mapState(["loadingMovies"])
   }
 };
 </script>

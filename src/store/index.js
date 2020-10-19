@@ -30,20 +30,20 @@ export default new Vuex.Store({
     SET_MOVIES: (state, { movies }) => {
       console.log(movies);
       state.moviesList = movies;
-      state.movieSelected = movies[0];
     }
   },
   actions: {
-    SET_PAGE: function ({ commit }, page) {
+    SET_PAGE: function({ commit }, page) {
       commit("SET_PAGE", { page: page });
     },
-    SET_SEARCH_STRING: function ({ commit }, searchString) {
+    SET_SEARCH_STRING: function({ commit }, searchString) {
       commit("SET_SEARCH_STRING", { searchString: searchString });
     },
-    SET_MOVIE: function ({ commit }, movie) {
+    SET_MOVIE: function({ commit }, movie) {
+      console.log(movie)
       commit("SET_MOVIE", { movieSelected: movie });
     },
-    GET_MOVIE: function ({ state, commit }, imdbID) {
+    GET_MOVIE: function({ state, commit }, imdbID) {
       state.loadingMovie = true;
       axios
         .get(`http://www.omdbapi.com/?i=${imdbID}&apikey=6f37363d`)
@@ -52,7 +52,7 @@ export default new Vuex.Store({
           if (response.data.Response === "False") {
             alert(response.data.Error);
           } else {
-            console.log(response)
+            console.log(response);
             commit("SET_MOVIE", { movieSelected: response.data });
           }
           state.loadingMovie = false;
@@ -64,11 +64,13 @@ export default new Vuex.Store({
           return err;
         });
     },
-    GET_MOVIES: function ({ state, commit }, { title, page }) {
+    GET_MOVIES: function({ state, commit }, { title, page }) {
       if (title !== "") {
         state.loadingMovies = true;
         const getMovies = axios
-          .get(`http://www.omdbapi.com/?s=${title}&page=${page}&apikey=6f37363d`)
+          .get(
+            `http://www.omdbapi.com/?s=${title}&page=${page}&apikey=6f37363d`
+          )
           .then(response => {
             console.log(response);
             if (response.data.Response === "False") {

@@ -5,7 +5,7 @@
 </template>
 
 <style lang="scss" module>
-@import 'src/design/index.scss';
+@import "src/design/index.scss";
 
 .button {
   @extend %typography-small;
@@ -22,7 +22,6 @@
   border: none;
 
   &--primary {
-    
     color: $color-button-text;
     box-shadow: 0 0 2px 2px #ffa000;
     border-radius: 2px;

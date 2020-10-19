@@ -5,7 +5,7 @@
       :alt="alt"
       width="96"
       height="96"
-    >
+    />
     <span v-html="text"></span>
   </div>
 </template>
@@ -15,23 +15,22 @@ export default {
   props: {
     imageSrc: {
       type: String,
-      default: '',
+      default: ""
     },
     text: {
       type: String,
-      default: '',
+      default: ""
     },
     alt: {
       type: String,
-      default: '',
+      default: ""
     }
-  },
-}
+  }
+};
 </script>
 
 <style lang="scss" module>
-
-.chip {  
+.chip {
   width: 300px;
   padding: 0 25px;
   margin: 10px;
@@ -48,5 +47,4 @@ export default {
   width: 60px;
   border-radius: 50%;
 }
-
 </style>

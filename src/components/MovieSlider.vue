@@ -1,32 +1,79 @@
 <!-- Simple Slider based only on native Vue transition  -->
 <template>
-<div>
-  <div id="slider">
-    <Chip v-if="movieSelected.Plot" imageSrc="year.png" :text="movieSelected.Year" alt="Year" class="smallHeight smallWidth"></Chip>
-    <Chip imageSrc="title.jpg" :text="movieSelected.Title" alt="Title"></Chip>
-    <Chip v-if="movieSelected.Writer" imageSrc="type.png" :text="movieSelected.Type" alt="Type" class="smallHeight smallWidth"></Chip>
-    <div class="break"></div>
-    <span id="transition">
-      <Loader v-if="loadingMovie"> </Loader>
-      <Chip v-else-if="!movieSelected.Plot" imageSrc="year.png" :text="movieSelected.Year" alt="Year" class="smallHeight smallWidth"></Chip>
-      <Chip  v-else imageSrc="plot.png" :text="movieSelected.Plot" alt="Plot" class="largeHeight largeWidth"></Chip>
-      <transition-group tag="div" class="img-slider" :name="back? 'slideback' : 'slide'">
-        <div v-for="number in [currentImg]" :key="number" >
-          <img :src="moviesList[Math.abs(currentImg) % moviesList.length].Poster"/>
-        </div>
-      </transition-group>
-      <Loader v-if="loadingMovie"> </Loader>
-      <Chip v-else-if="!movieSelected.Writer" imageSrc="type.png" :text="movieSelected.Type" alt="Type" class="smallHeight smallWidth"></Chip>
-      <Chip  v-else imageSrc="details.png" :text="allInfo" alt="Author" class="largeHeight largeWidth"></Chip>
-    </span>
+  <div>
+    <div id="slider">
+      <Chip
+        v-if="movieSelected.Plot"
+        imageSrc="year.png"
+        :text="movieSelected.Year"
+        alt="Year"
+        class="smallHeight smallWidth"
+      ></Chip>
+      <Chip imageSrc="title.jpg" :text="movieSelected.Title" alt="Title"></Chip>
+      <Chip
+        v-if="movieSelected.Writer"
+        imageSrc="type.png"
+        :text="movieSelected.Type"
+        alt="Type"
+        class="smallHeight smallWidth"
+      ></Chip>
+      <div class="break"></div>
+      <span id="transition">
+        <Loader v-if="loadingMovie"> </Loader>
+        <Chip
+          v-else-if="!movieSelected.Plot"
+          imageSrc="year.png"
+          :text="movieSelected.Year"
+          alt="Year"
+          class="smallHeight smallWidth"
+        ></Chip>
+        <Chip
+          v-else
+          imageSrc="plot.png"
+          :text="movieSelected.Plot"
+          alt="Plot"
+          class="largeHeight largeWidth"
+        ></Chip>
+        <transition-group
+          tag="div"
+          class="img-slider"
+          :name="back ? 'slideback' : 'slide'"
+        >
+          <div v-for="number in [currentImg]" :key="number">
+            <img
+              :src="moviesList[Math.abs(currentImg) % moviesList.length].Poster"
+            />
+          </div>
+        </transition-group>
+        <Loader v-if="loadingMovie"> </Loader>
+        <Chip
+          v-else-if="!movieSelected.Writer"
+          imageSrc="type.png"
+          :text="movieSelected.Type"
+          alt="Type"
+          class="smallHeight smallWidth"
+        ></Chip>
+        <Chip
+          v-else
+          imageSrc="details.png"
+          :text="allInfo"
+          alt="Author"
+          class="largeHeight largeWidth"
+        ></Chip>
+      </span>
+    </div>
+    <BaseButton
+      type="button"
+      @click="prev"
+      class="prevButton"
+      :disabled="disableButton"
+    >
+      <span>&#10094;</span>
+    </BaseButton>
+    <BaseButton type="button" @click="next" class="nextButton">
+      <span>&#10095;</span>
+    </BaseButton>
   </div>
-  <BaseButton type="button" @click="prev" class="prevButton" :disabled="disableButton">
-    <span>&#10094;</span>
-  </BaseButton>
-  <BaseButton type="button" @click="next" class="nextButton">
-    <span>&#10095;</span>
-  </BaseButton>
-</div>
 </template>
 
 <script>
@@ -49,79 +96,94 @@ export default {
     };
   },
   mounted() {
-    // setInterval(() => {
-    //     this.currentImg = this.currentImg + 1;
-    // }, 3000);
-    this.$store.dispatch("SET_MOVIE", this.movieSelected)
-    this.waitToGetMovie()
+    this.waitToGetMovie();
   },
   methods: {
-    getMovie () {
-      console.log(this.movieSelected)
-      this.$store.dispatch("GET_MOVIE", this.movieSelected.imdbID)
+    getMovie() {
+      console.log(this.movieSelected);
+      this.$store.dispatch("GET_MOVIE", this.movieSelected.imdbID);
     },
-    waitToGetMovie () {
-      clearTimeout(this.t)
+    waitToGetMovie() {
+      clearTimeout(this.t);
       this.t = setTimeout(() => {
-        this.getMovie()
+        this.getMovie();
       }, 3000);
     },
     next() {
       this.back = false;
       this.currentImg = this.currentImg + 1;
-      // const currentMovieIndex = this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
-      console.log(this.currentMovieIndex, this.moviesList)
       if (this.currentMovieIndex !== 9) {
-        this.$store.dispatch("SET_MOVIE", this.moviesList[this.currentMovieIndex + 1])
-        this.waitToGetMovie()
+        this.$store.dispatch(
+          "SET_MOVIE",
+          this.moviesList[this.currentMovieIndex + 1]
+        );
+        this.waitToGetMovie();
       } else {
-        this.$store.dispatch("SET_PAGE", this.page + 1)
-        this.$store.dispatch("GET_MOVIES", {title: this.searchString, page: this.page})
-        .then(response => {
-          console.log(response);
-          clearTimeout(this.t)
-          this.$store.dispatch("SET_MOVIE", response.data.Search[0])
-        })
+        this.$store.dispatch("SET_PAGE", this.page + 1);
+        this.$store
+          .dispatch("GET_MOVIES", { title: this.searchString, page: this.page })
+          .then(response => {
+            clearTimeout(this.t);
+            this.$store.dispatch("SET_MOVIE", response.data.Search[0]);
+          });
       }
     },
     prev() {
       this.back = true;
-      this.currentImg = this.currentImg - 1;
-      // const currentMovieIndex = this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
       if (this.currentMovieIndex !== 0) {
-        this.$store.dispatch("SET_MOVIE", this.moviesList[this.currentMovieIndex - 1])
-        this.waitToGetMovie()
+        this.currentImg = this.currentImg - 1;
+        console.log(
+          this.moviesList[Math.abs(this.currentImg) % this.moviesList.length]
+        );
+        this.$store.dispatch(
+          "SET_MOVIE",
+          this.moviesList[this.currentMovieIndex - 1]
+        );
+        this.waitToGetMovie();
       } else {
-        this.$store.dispatch("SET_PAGE", this.page - 1)
-        this.$store.dispatch("GET_MOVIES", {title: this.searchString, page: this.page})
-        .then(response => {
-          console.log(response);
-          clearTimeout(this.t)
-          this.$store.dispatch("SET_MOVIE", response.data.Search[0])
-        })
+        clearTimeout(this.t);
+        this.$store.dispatch("SET_PAGE", this.page - 1);
+        this.$store
+          .dispatch("GET_MOVIES", { title: this.searchString, page: this.page })
+          .then(response => {
+            this.$store.dispatch("SET_MOVIE", response.data.Search[9])
+            .then(response => {
+              this.currentImg = 9;
+              console.log(
+                response, this.moviesList[Math.abs(this.currentImg) % this.moviesList.length]
+              );
+            });
+          });
       }
     }
   },
   computed: {
-    currentMovieIndex () {
-      return this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
+    currentMovieIndex() {
+      return this.moviesList.findIndex(
+        movie => movie.imdbID === this.movieSelected.imdbID
+      );
     },
-    disableButton () {
-      return this.currentMovieIndex === 0 && this.page === 1
+    disableButton() {
+      return this.currentMovieIndex === 0 && this.page === 1;
     },
-    allInfo () {
+    allInfo() {
       return `Writer: ${this.movieSelected.Writer}<hr/>
         Director: ${this.movieSelected.Director}<hr/>
-        Actors: ${this.movieSelected.Actors}`
+        Actors: ${this.movieSelected.Actors}`;
     },
-    ...mapState(["searchString", "loadingMovies", "loadingMovie", "moviesList", "movieSelected", "page"])
+    ...mapState([
+      "searchString",
+      "loadingMovies",
+      "loadingMovie",
+      "moviesList",
+      "movieSelected",
+      "page"
+    ])
   }
 };
 </script>
 
 <style lang="scss" scoped>
-
-
 .break {
   flex-basis: 100%;
   height: 0;

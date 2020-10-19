@@ -46,26 +46,29 @@ export default {
 
   methods: {
     search() {
-      console.log(this.page)
+      console.log(this.page);
       this.$store.dispatch("SET_SEARCH_STRING", this.title);
-      if (this.searchString !== '') {
-        this.$store.dispatch("GET_MOVIES", {title: this.title, page: this.page}).then(response => {
-          console.log(response);
-          if (!response.data.Error) {
-            router.replace("/results")
-          }
-        })
+      if (this.searchString !== "") {
+        this.$store
+          .dispatch("GET_MOVIES", { title: this.title, page: this.page })
+          .then(response => {
+            console.log(response);
+            if (!response.data.Error) {
+              this.$store.dispatch("SET_MOVIE", response.data.Search[0]);
+              router.replace("/results");
+            }
+          });
       }
     }
   },
   computed: {
     ...mapState(["searchString", "page"])
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import 'src/design/index.scss';
+@import "src/design/index.scss";
 
 //** root
 :root {
@@ -97,7 +100,6 @@ body,
     margin-left: -16px;
   }
 }
-
 
 //** form
 .form {

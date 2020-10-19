@@ -11,11 +11,11 @@ import router from "../router/index";
 
 export default {
   methods: {
-    goToSearch () {
-      router.replace('/');
+    goToSearch() {
+      router.replace("/");
     },
-    goToResults () {
-      router.replace('/results');
+    goToResults() {
+      router.replace("/results");
     }
   }
 };
