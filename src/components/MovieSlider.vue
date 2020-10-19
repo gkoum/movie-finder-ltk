@@ -10,15 +10,6 @@
       <Loader v-if="loadingMovie"> </Loader>
       <Chip v-else-if="!movieSelected.Plot" imageSrc="year.png" :text="movieSelected.Year" alt="Year" class="smallHeight smallWidth"></Chip>
       <Chip  v-else imageSrc="plot.png" :text="movieSelected.Plot" alt="Plot" class="largeHeight largeWidth"></Chip>
-      <!-- <transition-group
-        tag="div"
-        class="img-slider"
-        :name="back ? 'slideback' : 'slide'"
-      >
-        <div v-for="movie in moviesList" :key="movie.imdbID">
-          <img :src="movieSelected.Poster" />
-        </div>
-      </transition-group> -->
       <transition-group tag="div" class="img-slider" name="slide">
         <div v-for="number in [currentImg]" :key="number" >
           <img :src="moviesList[Math.abs(currentImg) % moviesList.length].Poster"/>
@@ -52,11 +43,6 @@ export default {
   },
   data() {
     return {
-      imgList: [
-        'http://via.placeholder.com/350x150',
-        'http://via.placeholder.com/350x151',
-        'http://via.placeholder.com/350x152'
-      ],
       currentImg: 0,
       back: false,
       t: () => {}
@@ -95,7 +81,6 @@ export default {
           console.log(response);
           clearTimeout(this.t)
           this.$store.dispatch("SET_MOVIE", response.data.Search[0])
-          // this.waitToGetMovie()
         })
       }
     },
@@ -103,8 +88,18 @@ export default {
       this.back = true;
       this.currentImg = this.currentImg - 1;
       const currentMovieIndex = this.moviesList.findIndex(movie => movie.imdbID === this.movieSelected.imdbID);
-      this.$store.dispatch("SET_MOVIE", this.moviesList[currentMovieIndex - 1])
-      this.waitToGetMovie()
+      if (currentMovieIndex !== 0) {
+        this.$store.dispatch("SET_MOVIE", this.moviesList[currentMovieIndex - 1])
+        this.waitToGetMovie()
+      } else {
+        this.$store.dispatch("SET_PAGE", this.page - 1)
+        this.$store.dispatch("GET_MOVIES", {title: this.searchString, page: this.page})
+        .then(response => {
+          console.log(response);
+          clearTimeout(this.t)
+          this.$store.dispatch("SET_MOVIE", response.data.Search[0])
+        })
+      }
     }
   },
   computed: {
