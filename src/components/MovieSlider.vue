@@ -100,6 +100,7 @@ export default {
     };
   },
   mounted() {
+    this.currentImg = this.currentMovieIndex;
     this.waitToGetMovie();
   },
   methods: {
