@@ -41,7 +41,7 @@
         >
           <div v-for="number in [currentImg]" :key="number">
             <img
-              :src="moviesList[Math.abs(currentImg) % moviesList.length].Poster"
+              :src="moviesList.length > 9 ? moviesList[Math.abs(currentImg) % moviesList.length].Poster : ''"
             />
           </div>
         </transition-group>

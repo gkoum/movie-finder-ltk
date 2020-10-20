@@ -1,11 +1,9 @@
-describe("NavBar", () => {
-  it("selecting search gets to the same page", () => {
+describe("Search", () => {
+  const text = "lords";
+  it("when clicking find gets to results", () => {
     cy.visit("/");
-    cy.get("#nav")
-      .find("ul")
-      .find("li")
-      .first()
-      .click({ force: true });
+    cy.get('input').type(`${text}{enter}`);
+    // cy.get('button').click({ force: true });
 
     cy.contains("h2", "Search For Movies");
   });
