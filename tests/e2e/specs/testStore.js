@@ -4,11 +4,6 @@ const text = "lords";
 describe("Store", () => {
   it("has the right properties", () => {
     getStore()
-      .its("strict")
-      .should("equal", false);
-  });
-  it("has the right properties", () => {
-    getStore()
       .its("state")
       .should("have.keys", [
         "loadingMovies",
