@@ -40,7 +40,7 @@ export default new Vuex.Store({
       commit("SET_SEARCH_STRING", { searchString: searchString });
     },
     SET_MOVIE: function({ commit }, movie) {
-      console.log(movie)
+      console.log(movie);
       commit("SET_MOVIE", { movieSelected: movie });
     },
     GET_MOVIE: function({ state, commit }, imdbID) {

@@ -2,7 +2,7 @@ describe("Search", () => {
   const text = "lords";
   it("when clicking find gets to results", () => {
     cy.visit("/");
-    cy.get('input').type(`${text}{enter}`);
+    cy.get("input").type(`${text}{enter}`);
     // cy.get('button').click({ force: true });
 
     cy.contains("h2", "Search For Movies");

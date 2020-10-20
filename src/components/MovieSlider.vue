@@ -41,7 +41,11 @@
         >
           <div v-for="number in [currentImg]" :key="number">
             <img
-              :src="moviesList.length > 9 ? moviesList[Math.abs(currentImg) % moviesList.length].Poster : ''"
+              :src="
+                moviesList.length > 9
+                  ? moviesList[Math.abs(currentImg) % moviesList.length].Poster
+                  : ''
+              "
             />
           </div>
         </transition-group>
@@ -96,7 +100,7 @@ export default {
     };
   },
   mounted() {
-    console.log('mounted')
+    console.log("mounted");
     this.waitToGetMovie();
   },
   methods: {
@@ -132,10 +136,10 @@ export default {
     },
     prev() {
       this.back = true;
-      console.log(this.currentImg)
+      console.log(this.currentImg);
       if (this.currentMovieIndex !== 0) {
         this.currentImg = this.currentImg - 1;
-        console.log(this.currentImg)
+        console.log(this.currentImg);
         console.log(
           this.moviesList[Math.abs(this.currentImg) % this.moviesList.length]
         );
@@ -150,16 +154,20 @@ export default {
         this.$store
           .dispatch("GET_MOVIES", { title: this.searchString, page: this.page })
           .then(response => {
-            console.log(response, this.moviesList)
-            this.$store.dispatch("SET_MOVIE", response.data.Search[9])
-            .then(response => {
-              this.currentImg = 9;
-              this.waitToGetMovie();
-              console.log(this.currentImg)
-              console.log(
-                response, this.moviesList[Math.abs(this.currentImg) % this.moviesList.length]
-              );
-            });
+            console.log(response, this.moviesList);
+            this.$store
+              .dispatch("SET_MOVIE", response.data.Search[9])
+              .then(response => {
+                this.currentImg = 9;
+                this.waitToGetMovie();
+                console.log(this.currentImg);
+                console.log(
+                  response,
+                  this.moviesList[
+                    Math.abs(this.currentImg) % this.moviesList.length
+                  ]
+                );
+              });
           });
       }
     }
