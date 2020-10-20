@@ -100,12 +100,10 @@ export default {
     };
   },
   mounted() {
-    console.log("mounted");
     this.waitToGetMovie();
   },
   methods: {
     getMovie() {
-      console.log(this.movieSelected);
       this.$store.dispatch("GET_MOVIE", this.movieSelected.imdbID);
     },
     waitToGetMovie() {
@@ -136,13 +134,8 @@ export default {
     },
     prev() {
       this.back = true;
-      console.log(this.currentImg);
       if (this.currentMovieIndex !== 0) {
         this.currentImg = this.currentImg - 1;
-        console.log(this.currentImg);
-        console.log(
-          this.moviesList[Math.abs(this.currentImg) % this.moviesList.length]
-        );
         this.$store.dispatch(
           "SET_MOVIE",
           this.moviesList[this.currentMovieIndex - 1]
@@ -154,19 +147,11 @@ export default {
         this.$store
           .dispatch("GET_MOVIES", { title: this.searchString, page: this.page })
           .then(response => {
-            console.log(response, this.moviesList);
             this.$store
               .dispatch("SET_MOVIE", response.data.Search[9])
-              .then(response => {
+              .then(() => {
                 this.currentImg = 9;
                 this.waitToGetMovie();
-                console.log(this.currentImg);
-                console.log(
-                  response,
-                  this.moviesList[
-                    Math.abs(this.currentImg) % this.moviesList.length
-                  ]
-                );
               });
           });
       }

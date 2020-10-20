@@ -35,7 +35,6 @@ export default {
     BaseButton
   },
   mounted() {
-    console.log(this.searchString);
     this.title = this.searchString;
   },
   data() {
@@ -46,13 +45,11 @@ export default {
 
   methods: {
     search() {
-      console.log(this.page);
       this.$store.dispatch("SET_SEARCH_STRING", this.title);
       if (this.searchString !== "") {
         this.$store
           .dispatch("GET_MOVIES", { title: this.title, page: this.page })
           .then(response => {
-            console.log(response);
             if (!response.data.Error) {
               this.$store.dispatch("SET_MOVIE", response.data.Search[0]);
               router.replace("/results");

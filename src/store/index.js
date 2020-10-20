@@ -16,19 +16,15 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_PAGE: (state, { page }) => {
-      console.log(page);
       state.page = page;
     },
     SET_SEARCH_STRING: (state, { searchString }) => {
-      console.log(searchString);
       state.searchString = searchString;
     },
     SET_MOVIE: (state, { movieSelected }) => {
-      console.log(movieSelected);
       state.movieSelected = movieSelected;
     },
     SET_MOVIES: (state, { movies }) => {
-      console.log(movies);
       state.moviesList = movies;
     }
   },
@@ -40,7 +36,6 @@ export default new Vuex.Store({
       commit("SET_SEARCH_STRING", { searchString: searchString });
     },
     SET_MOVIE: function({ commit }, movie) {
-      console.log(movie);
       commit("SET_MOVIE", { movieSelected: movie });
     },
     GET_MOVIE: function({ state, commit }, imdbID) {
@@ -48,11 +43,9 @@ export default new Vuex.Store({
       axios
         .get(`http://www.omdbapi.com/?i=${imdbID}&apikey=6f37363d`)
         .then(response => {
-          console.log(response);
           if (response.data.Response === "False") {
             alert(response.data.Error);
           } else {
-            console.log(response);
             commit("SET_MOVIE", { movieSelected: response.data });
           }
           state.loadingMovie = false;
@@ -72,7 +65,6 @@ export default new Vuex.Store({
             `http://www.omdbapi.com/?s=${title}&page=${page}&apikey=6f37363d`
           )
           .then(response => {
-            console.log(response);
             if (response.data.Response === "False") {
               alert(response.data.Error);
             } else {
